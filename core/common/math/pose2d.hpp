@@ -23,9 +23,6 @@ struct Pose2D
 // go very negative) even though the rover is physically only ever
 // facing one direction at a time. "Wrapping" the angle back into a
 // consistent range keeps later comparisons and math well-behaved.
-//
-// This one is already implemented for you in pose2d.cpp — it's a
-// small utility, not one of the learning exercises.
 double normalizeAngleRadians(double angleRadians);
 
 } // namespace openrover::math
