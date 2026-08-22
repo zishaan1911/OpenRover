@@ -1,0 +1,11 @@
+# Build output
+build/
+out/
+
+# Editor/IDE
+.vs/
+.vscode/
+*.user
+
+# CMake
+CMakeUserPresets.json
