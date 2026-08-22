@@ -1,0 +1,262 @@
+<?xml version="1.0" ?>
+<sdf version="1.9">
+  <model name="rover">
+    <pose>0 0 0 0 0 0</pose>
+
+    <!-- ============================================================
+         CHASSIS
+         The main body of the rover. Its pose is 0.1m off the ground
+         (in z) because that's the same height as the wheel radius
+         below — that keeps the wheels touching the ground exactly.
+         ============================================================ -->
+    <link name="chassis">
+      <pose>0 0 0.1 0 0 0</pose>
+
+      <!-- Mass and inertia describe how the chassis resists being
+           pushed or rotated. These numbers are computed for a solid
+           box of size 0.4m x 0.3m x 0.15m with a mass of 5kg, using
+           the standard box-inertia formula. -->
+      <inertial>
+        <mass>5</mass>
+        <inertia>
+          <ixx>0.046875</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.076042</iyy>
+          <iyz>0</iyz>
+          <izz>0.104167</izz>
+        </inertia>
+      </inertial>
+
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.4 0.3 0.15</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.2 0.4 0.8 1</ambient>
+          <diffuse>0.2 0.4 0.8 1</diffuse>
+          <specular>0.2 0.4 0.8 1</specular>
+        </material>
+      </visual>
+
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.4 0.3 0.15</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- ============================================================
+         LEFT WHEEL
+         A cylinder, rotated 90 degrees (the "-1.5708" in the pose,
+         which is -pi/2 radians) so its rolling axis points sideways
+         (along y) instead of straight up. Positioned 0.2m to the left
+         of the chassis center, matching wheel_separation=0.4 in the
+         DiffDrive plugin below (0.4m between wheel centers = 0.2m on
+         each side).
+         ============================================================ -->
+    <link name="left_wheel">
+      <pose relative_to="chassis">0 0.2 0 -1.5708 0 0</pose>
+
+      <!-- Mass and inertia for a solid cylinder: radius 0.1m,
+           length (thickness) 0.05m, mass 1kg. -->
+      <inertial>
+        <mass>1</mass>
+        <inertia>
+          <ixx>0.0027083</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0027083</iyy>
+          <iyz>0</iyz>
+          <izz>0.005</izz>
+        </inertia>
+      </inertial>
+
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.1</radius>
+            <length>0.05</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+
+      <collision name="collision">
+        <geometry>
+          <cylinder>
+            <radius>0.1</radius>
+            <length>0.05</length>
+          </cylinder>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- ============================================================
+         RIGHT WHEEL
+         Identical to the left wheel, just mirrored to the other side
+         (y = -0.2 instead of +0.2).
+         ============================================================ -->
+    <link name="right_wheel">
+      <pose relative_to="chassis">0 -0.2 0 -1.5708 0 0</pose>
+
+      <inertial>
+        <mass>1</mass>
+        <inertia>
+          <ixx>0.0027083</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0027083</iyy>
+          <iyz>0</iyz>
+          <izz>0.005</izz>
+        </inertia>
+      </inertial>
+
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.1</radius>
+            <length>0.05</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+
+      <collision name="collision">
+        <geometry>
+          <cylinder>
+            <radius>0.1</radius>
+            <length>0.05</length>
+          </cylinder>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- ============================================================
+         CASTER WHEEL
+         A small ball that drags along the ground at the rear of the
+         rover, purely to keep it from tipping over — it's not driven
+         by any motor. Positioned so its bottom just touches the
+         ground, the same way the drive wheels do.
+         ============================================================ -->
+    <frame name="caster_frame" attached_to="chassis">
+      <pose>-0.15 0 -0.05 0 0 0</pose>
+    </frame>
+
+    <link name="caster">
+      <pose relative_to="caster_frame"/>
+
+      <inertial>
+        <mass>0.5</mass>
+        <inertia>
+          <ixx>0.0005</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0005</iyy>
+          <iyz>0</iyz>
+          <izz>0.0005</izz>
+        </inertia>
+      </inertial>
+
+      <visual name="visual">
+        <geometry>
+          <sphere>
+            <radius>0.05</radius>
+          </sphere>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+
+      <collision name="collision">
+        <geometry>
+          <sphere>
+            <radius>0.05</radius>
+          </sphere>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- ============================================================
+         JOINTS
+         These connect the links above into one working rover.
+         The wheel joints are "revolute" (they rotate around one
+         axis, like a hinge) with no rotation limit, so they can spin
+         freely forever — that's what lets them act as drive wheels.
+         The caster uses a "ball" joint so it can swivel freely in
+         any direction, like a real caster wheel does.
+         ============================================================ -->
+    <joint name="left_wheel_joint" type="revolute">
+      <pose relative_to="left_wheel"/>
+      <parent>chassis</parent>
+      <child>left_wheel</child>
+      <axis>
+        <xyz expressed_in="__model__">0 1 0</xyz>
+        <limit>
+          <lower>-1.79769e+308</lower>
+          <upper>1.79769e+308</upper>
+        </limit>
+      </axis>
+    </joint>
+
+    <joint name="right_wheel_joint" type="revolute">
+      <pose relative_to="right_wheel"/>
+      <parent>chassis</parent>
+      <child>right_wheel</child>
+      <axis>
+        <xyz expressed_in="__model__">0 1 0</xyz>
+        <limit>
+          <lower>-1.79769e+308</lower>
+          <upper>1.79769e+308</upper>
+        </limit>
+      </axis>
+    </joint>
+
+    <joint name="caster_wheel_joint" type="ball">
+      <parent>chassis</parent>
+      <child>caster</child>
+    </joint>
+
+    <!-- ============================================================
+         PLUGINS
+         DiffDrive is what actually makes this a differential-drive
+         rover: it listens for velocity commands on the "cmd_vel"
+         topic (linear + angular velocity, same shape as our
+         BodyVelocity from the math library) and spins the two wheel
+         joints at whatever speed achieves that. It also publishes
+         odometry (the rover's estimated pose over time) so other
+         tools can track where it thinks it is.
+
+         JointStatePublisher reports the current angle of every joint
+         (like the wheels), which tools like RViz use later to
+         visualize the rover moving correctly.
+         ============================================================ -->
+    <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
+      <left_joint>left_wheel_joint</left_joint>
+      <right_joint>right_wheel_joint</right_joint>
+      <wheel_separation>0.4</wheel_separation>
+      <wheel_radius>0.1</wheel_radius>
+      <odom_publish_frequency>50</odom_publish_frequency>
+      <topic>cmd_vel</topic>
+    </plugin>
+
+    <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher">
+    </plugin>
+
+  </model>
+</sdf>
