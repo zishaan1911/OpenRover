@@ -1,10 +1,12 @@
 add_executable(openrover_unit_tests
     test_differential_drive_kinematics.cpp
+    test_rover_model.cpp
 )
 
 target_link_libraries(openrover_unit_tests
     PRIVATE
         openrover_math
+        openrover_rover_model
         GTest::gtest_main
 )
 
