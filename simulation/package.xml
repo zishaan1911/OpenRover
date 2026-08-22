@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>openrover_simulation</name>
+  <version>0.0.1</version>
+  <description>
+    Gazebo simulation assets for OpenRover: worlds, the rover model, and
+    the launch files that bring them up together.
+  </description>
+  <maintainer email="iamzishaan@gmail.com">Zishaan</maintainer>
+  <license>TODO: License declaration</license>
+
+  <!-- These are the ROS 2 packages this package needs at runtime:
+       ros_gz_sim lets us launch Gazebo from a ROS 2 launch file, and
+       ros_gz_bridge will let ROS 2 topics (like /cmd_vel) talk to
+       Gazebo topics once we wire that up in a later step. -->
+  <exec_depend>ros_gz_sim</exec_depend>
+  <exec_depend>ros_gz_bridge</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

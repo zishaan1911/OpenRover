@@ -9,3 +9,6 @@ out/
 
 # CMake
 CMakeUserPresets.json
+
+#progress
+progress.md
