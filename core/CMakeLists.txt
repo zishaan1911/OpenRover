@@ -3,3 +3,4 @@
 # shared/common code. We add each piece as we build it.
 
 add_subdirectory(common/math)
+add_subdirectory(common/rover_model)
