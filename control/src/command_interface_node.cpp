@@ -24,6 +24,12 @@ void CommandInterfaceNode::setVelocity(double linearVelocityMetersPerSecond, dou
     velocityMessage.angular.z = angularVelocityRadiansPerSecond;
     velocityPublisher_->publish(velocityMessage);
 
+    RCLCPP_INFO(
+        this->get_logger(),
+        "Set velocity: linear=%.2f m/s, angular=%.2f rad/s",
+        linearVelocityMetersPerSecond,
+        angularVelocityRadiansPerSecond);
+        
 }
 
 void CommandInterfaceNode::handleCommandMessage(const std_msgs::msg::String::SharedPtr commandMessage)
