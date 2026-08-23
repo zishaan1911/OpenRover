@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ros_gz_interfaces/srv/set_entity_pose.hpp>
+#include <std_srvs/srv/trigger.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
@@ -28,8 +30,14 @@ public:
 private:
     void handleCommandMessage(const std_msgs::msg::String::SharedPtr commandMessage);
 
+    void handleResetRequest(
+        const std::shared_ptr<std_srvs::srv::Trigger::Request> request,
+        std::shared_ptr<std_srvs::srv::Trigger::Response> response);
+
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr velocityPublisher_;
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr commandSubscriber_;
+    rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr resetServiceServer_;
+    rclcpp::Client<ros_gz_interfaces::srv::SetEntityPose>::SharedPtr setPoseClient_;
 
     double forwardSpeedMetersPerSecond_ = 0.5;
     double rotationSpeedRadiansPerSecond_ = 0.5;

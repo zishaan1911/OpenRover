@@ -30,7 +30,16 @@ def generate_launch_description():
         output='screen',
     )
 
+    reset_pose_bridge_node = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        name='reset_pose_bridge',
+        arguments=['/world/openrover_world/set_pose@ros_gz_interfaces/srv/SetEntityPose'],
+        output='screen',
+    )
+
     return LaunchDescription([
         simulation_launch_description,
         command_interface_node,
+        reset_pose_bridge_node,
     ])

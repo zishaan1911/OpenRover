@@ -8,6 +8,8 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
+find_package(ros_gz_interfaces REQUIRED)
 
 add_executable(command_interface_node
   src/main.cpp
@@ -22,6 +24,8 @@ ament_target_dependencies(command_interface_node
   rclcpp
   std_msgs
   geometry_msgs
+  std_srvs
+  ros_gz_interfaces
 )
 
 install(TARGETS
