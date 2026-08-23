@@ -2291,17 +2291,17 @@ This should only be introduced after the core local architecture is stable.
 
 - [✔] Repository created
 - [✔] License selected
-- [ ] Initial architecture documented
-- [ ] Build system configured
-- [ ] CI skeleton configured
+- [✔] Initial architecture documented
+- [✔] Build system configured
+- [✔] CI skeleton configured
 
 ## Milestone 1 — Basic Rover
 
-- [ ] Gazebo world
-- [ ] Rover model
-- [ ] Differential drive
-- [ ] Basic control
-- [ ] Reset functionality
+- [✔] Gazebo world
+- [✔] Rover model
+- [✔] Differential drive
+- [✔] Basic control
+- [✔] Reset functionality
 
 ## Milestone 2 — Sensors
 
