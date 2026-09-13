@@ -12,3 +12,6 @@ CMakeUserPresets.json
 
 #progress
 progress.md
+
+# Sandbox artifacts (should never be committed)
+mnt/

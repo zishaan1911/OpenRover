@@ -1,0 +1,62 @@
+%%{init: {'theme': 'neutral'}}%%
+flowchart LR
+
+    subgraph OperatorGroup["Operator / Future Planner"]
+        User(["Human operator or\nfuture autonomy stack"])
+    end
+
+    subgraph ControlGroup["control package (openrover_control)"]
+        CIN["CommandInterfaceNode"]
+    end
+
+    subgraph BridgeGroup["ROS 2 <-> Gazebo bridges (ros_gz_bridge)"]
+        TopicBridge["parameter_bridge\n(topic bridge, ros_gz_bridge.yaml)"]
+        ServiceBridge["parameter_bridge\n(reset_pose_bridge, CLI-configured)"]
+    end
+
+    subgraph GazeboGroup["Gazebo Harmonic - gz-sim (rover_world.sdf)"]
+        DiffDrivePlugin["DiffDrive plugin"]
+        JointStatePlugin["JointStatePublisher plugin"]
+        PhysicsEngine["Physics engine"]
+        SetPoseService["world openrover_world set_pose\n(Gazebo service)"]
+    end
+
+    subgraph PlannedGroup["PLANNED - Phase 2 (not implemented yet)"]
+        LidarSensor["LiDAR sensor plugin"]
+        ImuSensor["IMU sensor plugin"]
+        CameraSensor["Camera sensor plugin"]
+        EncoderSensor["Wheel encoder sensors"]
+        GpsSensor["GPS sensor plugin"]
+    end
+
+    User -- "rover_command\n(std_msgs/String)" --> CIN
+    CIN -- "cmd_vel\n(geometry_msgs/Twist)" --> TopicBridge
+    TopicBridge -- "gz.msgs.Twist" --> DiffDrivePlugin
+    DiffDrivePlugin --> PhysicsEngine
+    PhysicsEngine --> JointStatePlugin
+
+    PhysicsEngine -- "model rover odometry" --> TopicBridge
+    TopicBridge -- "odom\n(nav_msgs/Odometry)" --> User
+    TopicBridge -- "tf\n(tf2_msgs/TFMessage)" --> User
+    JointStatePlugin -- "world .../joint_state" --> TopicBridge
+    TopicBridge -- "joint_states\n(sensor_msgs/JointState)" --> User
+    PhysicsEngine -- "clock" --> TopicBridge
+    TopicBridge -- "clock\n(rosgraph_msgs/Clock)" --> User
+
+    User -- "reset_rover\n(std_srvs/Trigger) [service call]" --> CIN
+    CIN -- "SetEntityPose request" --> ServiceBridge
+    ServiceBridge -- "gz service call" --> SetPoseService
+    SetPoseService --> PhysicsEngine
+
+    PhysicsEngine -.-> LidarSensor
+    PhysicsEngine -.-> ImuSensor
+    PhysicsEngine -.-> CameraSensor
+    PhysicsEngine -.-> EncoderSensor
+    PhysicsEngine -.-> GpsSensor
+
+    style PlannedGroup stroke-dasharray: 6 4
+    style LidarSensor stroke-dasharray: 3 3
+    style ImuSensor stroke-dasharray: 3 3
+    style CameraSensor stroke-dasharray: 3 3
+    style EncoderSensor stroke-dasharray: 3 3
+    style GpsSensor stroke-dasharray: 3 3
