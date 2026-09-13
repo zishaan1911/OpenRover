@@ -1,0 +1,117 @@
+%%{init: {'theme': 'neutral'}}%%
+classDiagram
+    %% ================================================================
+    %% OpenRover — C++ Class Diagram
+    %% Reflects the codebase exactly as implemented at end of Phase 1.
+    %% Namespaces noted as stereotypes since Mermaid class-grouping
+    %% support varies across renderers (GitHub, VS Code, etc.) — this
+    %% syntax is the safest choice for maximum compatibility.
+    %% ================================================================
+
+    %% ---------------- core/common/math ----------------
+
+    class Pose2D {
+        <<struct, openrover::math>>
+        +double x
+        +double y
+        +double theta
+    }
+
+    class WheelVelocities {
+        <<struct, openrover::math>>
+        +double leftWheelVelocityMetersPerSecond
+        +double rightWheelVelocityMetersPerSecond
+    }
+
+    class BodyVelocity {
+        <<struct, openrover::math>>
+        +double linearVelocityMetersPerSecond
+        +double angularVelocityRadiansPerSecond
+    }
+
+    class DifferentialDriveConfiguration {
+        <<struct, openrover::math>>
+        +double wheelSeparationMeters
+    }
+
+    class DifferentialDriveKinematics {
+        <<free functions, openrover::math>>
+        +normalizeAngleRadians(double) double
+        +computeBodyVelocityFromWheelVelocities(WheelVelocities, DifferentialDriveConfiguration) BodyVelocity
+        +integratePoseForward(Pose2D, BodyVelocity, double) Pose2D
+    }
+
+    %% ---------------- core/common/rover_model ----------------
+
+    class RoverModel {
+        <<openrover>>
+        -DifferentialDriveConfiguration driveConfiguration_
+        -Pose2D currentPose_
+        -BodyVelocity commandedVelocity_
+        +RoverModel(DifferentialDriveConfiguration, Pose2D)
+        +setVelocity(double, double) void
+        +setWheelVelocities(WheelVelocities) void
+        +stop() void
+        +tick(double) void
+        +getCurrentPose() Pose2D
+        +getCurrentCommandedVelocity() BodyVelocity
+        +resetToPose(Pose2D) void
+    }
+
+    %% ---------------- control/ (ROS 2 node) ----------------
+
+    class rclcpp_Node {
+        <<ROS 2 base class>>
+    }
+
+    class CommandInterfaceNode {
+        <<openrover, ROS 2 node>>
+        -Publisher~Twist~ velocityPublisher_
+        -Subscription~String~ commandSubscriber_
+        -Service~Trigger~ resetServiceServer_
+        -Client~SetEntityPose~ setPoseClient_
+        -double forwardSpeedMetersPerSecond_
+        -double rotationSpeedRadiansPerSecond_
+        +CommandInterfaceNode()
+        +setVelocity(double, double) void
+        -handleCommandMessage(String) void
+        -handleResetRequest(Trigger.Request, Trigger.Response) void
+    }
+
+    class Twist {
+        <<geometry_msgs/msg>>
+        +Vector3 linear
+        +Vector3 angular
+    }
+
+    class StdMsgsString {
+        <<std_msgs/msg::String>>
+        +string data
+    }
+
+    class Trigger {
+        <<std_srvs/srv>>
+        +Request
+        +Response
+    }
+
+    class SetEntityPose {
+        <<ros_gz_interfaces/srv>>
+        +Entity entity
+        +Pose pose
+    }
+
+    %% ---------------- Relationships ----------------
+
+    RoverModel *-- Pose2D : currentPose_
+    RoverModel *-- BodyVelocity : commandedVelocity_
+    RoverModel *-- DifferentialDriveConfiguration : driveConfiguration_
+    RoverModel ..> DifferentialDriveKinematics : uses in tick and setWheelVelocities
+
+    CommandInterfaceNode --|> rclcpp_Node : extends
+    CommandInterfaceNode ..> Twist : publishes cmd_vel
+    CommandInterfaceNode ..> StdMsgsString : subscribes rover_command
+    CommandInterfaceNode ..> Trigger : serves reset_rover
+    CommandInterfaceNode ..> SetEntityPose : calls set_pose
+
+    RoverModel .. CommandInterfaceNode : NOT YET CONNECTED - independent
