@@ -193,6 +193,64 @@
     </link>
 
     <!-- ============================================================
+         SENSOR MAST
+         A small post on top of the chassis that the sensors mount to.
+         Giving sensors their own link (rather than bolting them onto
+         the chassis directly) means each sensor gets a clean, named
+         coordinate frame — which matters a lot later for SLAM and
+         localization, where "where exactly was this reading taken
+         from, relative to the robot's centre?" has to be answered
+         precisely.
+         ============================================================ -->
+    <link name="sensor_mast">
+      <pose relative_to="chassis">0.1 0 0.1 0 0 0</pose>
+
+      <inertial>
+        <mass>0.2</mass>
+        <inertia>
+          <ixx>0.000152</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.000152</iyy>
+          <iyz>0</iyz>
+          <izz>0.00009</izz>
+        </inertia>
+      </inertial>
+
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.03</radius>
+            <length>0.08</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.8 0.3 0.1 1</ambient>
+          <diffuse>0.8 0.3 0.1 1</diffuse>
+          <specular>0.8 0.3 0.1 1</specular>
+        </material>
+      </visual>
+
+      <collision name="collision">
+        <geometry>
+          <cylinder>
+            <radius>0.03</radius>
+            <length>0.08</length>
+          </cylinder>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- Rigidly bolts the sensor mast to the chassis. A "fixed" joint
+         never moves, which is exactly what we want — the sensors
+         should be locked to the rover body, not free to swing. -->
+    <joint name="sensor_mast_joint" type="fixed">
+      <parent>chassis</parent>
+      <child>sensor_mast</child>
+    </joint>
+
+
+    <!-- ============================================================
          JOINTS
          These connect the links above into one working rover.
          The wheel joints are "revolute" (they rotate around one
