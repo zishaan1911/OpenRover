@@ -293,6 +293,25 @@
           </noise>
         </lidar>
       </sensor>
+
+      <!-- ==========================================================
+           IMU (Inertial Measurement Unit)
+           Reports orientation, angular velocity, and linear
+           acceleration — i.e. which way the rover is facing and how
+           it is being shaken/turned/accelerated.
+
+           IMPORTANT: unlike the LiDAR, this sensor does NOT work off
+           the Sensors system plugin. It needs its own separate
+           "gz-sim-imu-system" plugin declared in the WORLD file
+           (see rover_world.sdf). Without that, this sensor is loaded
+           but silently publishes nothing at all.
+           ========================================================== -->
+      <sensor name="imu" type="imu">
+        <topic>imu</topic>
+        <update_rate>100</update_rate>
+        <always_on>true</always_on>
+        <gz_frame_id>rover/sensor_mast</gz_frame_id>
+      </sensor>
     </link>
 
     <!-- Rigidly bolts the sensor mast to the chassis. A "fixed" joint

@@ -14,6 +14,15 @@
       <render_engine>ogre2</render_engine>
     </plugin>
 
+    <!-- The IMU sensor on the rover needs this system plugin to
+         actually produce readings. Rendering-based sensors (LiDAR,
+         cameras) are handled by the Sensors plugin above, but the IMU
+         is not rendering-based and needs its own system. Without this
+         line, the IMU loads without error but silently publishes
+         nothing. -->
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu">
+    </plugin>
+
     <light type="directional" name="sun">
       <cast_shadows>true</cast_shadows>
       <pose>0 0 10 0 0 0</pose>
