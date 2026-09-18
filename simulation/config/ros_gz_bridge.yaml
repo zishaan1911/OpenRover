@@ -42,3 +42,14 @@
   ros_type_name: "rosgraph_msgs/msg/Clock"
   gz_type_name: "gz.msgs.Clock"
   direction: GZ_TO_ROS
+
+# --- Phase 2 sensors ---
+# Gazebo automatically namespaces sensor topics by
+# world/model/link/sensor, so the raw Gazebo topic is much longer
+# than the short <topic> name given in model.sdf.
+
+- ros_topic_name: "/scan"
+  gz_topic_name: "/world/openrover_world/model/rover/link/sensor_mast/sensor/lidar/scan"
+  ros_type_name: "sensor_msgs/msg/LaserScan"
+  gz_type_name: "gz.msgs.LaserScan"
+  direction: GZ_TO_ROS
